@@ -56,15 +56,74 @@ const project = {
   reflection: ""
 };
 
-/* ---------- EDIT: Vulnerability solution cases ---------- */
+/* ---------- EDIT: Vulnerability solution cases ----------
+   owasp          → the OWASP Top 10 ID this case belongs to, e.g. "A05" (see list below), or "" if unsure
+   language       → shown above the code, e.g. "PHP", "JavaScript", "Python"
+   vulnerableCode → the original, unsafe code
+   fixedCode      → the same code after your fix (changed lines are highlighted automatically)
+
+   Write code between backticks ` ` so it can span several lines. Example:
+     vulnerableCode: `
+$sql = "SELECT * FROM users WHERE username = '$user'";
+$result = mysqli_query($conn, $sql);`,
+     fixedCode: `
+$stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->bind_param("s", $user);
+$stmt->execute();`,
+   ---------------------------------------------------------- */
 const cases = [
-  { title: "Login Test",                              description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
-  { title: "Data 1 — Specific topic to be added",     description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
-  { title: "Data 2 — Specific topic to be added",     description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
-  { title: "SQL Injection",                           description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
-  { title: "Vulnerability topic to be decided",       description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
-  { title: "Vulnerability topic to be decided",       description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" }
+  {
+    title: "Login Test", owasp: "A07",
+    description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "",
+    language: "", vulnerableCode: ``, fixedCode: ``
+  },
+  {
+    title: "Data 1 — Specific topic to be added", owasp: "",
+    description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "",
+    language: "", vulnerableCode: ``, fixedCode: ``
+  },
+  {
+    title: "Data 2 — Specific topic to be added", owasp: "",
+    description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "",
+    language: "", vulnerableCode: ``, fixedCode: ``
+  },
+  {
+    title: "SQL Injection", owasp: "A05",
+    description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "",
+    language: "", vulnerableCode: ``, fixedCode: ``
+  },
+  {
+    title: "Vulnerability topic to be decided", owasp: "",
+    description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "",
+    language: "", vulnerableCode: ``, fixedCode: ``
+  },
+  {
+    title: "Vulnerability topic to be decided", owasp: "",
+    description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "",
+    language: "", vulnerableCode: ``, fixedCode: ``
+  }
 ];
+
+/* ---------- EDIT: OWASP Top 10 list used for the coverage grid ----------
+   This is the 2025 edition. If your course uses the 2021 edition,
+   replace the version and the ten names below.
+   ---------------------------------------------------------- */
+const owaspTop10 = {
+  version: "2025",
+  link: "https://owasp.org/Top10/",
+  items: [
+    { id: "A01", name: "Broken Access Control" },
+    { id: "A02", name: "Security Misconfiguration" },
+    { id: "A03", name: "Software Supply Chain Failures" },
+    { id: "A04", name: "Cryptographic Failures" },
+    { id: "A05", name: "Injection" },
+    { id: "A06", name: "Insecure Design" },
+    { id: "A07", name: "Authentication Failures" },
+    { id: "A08", name: "Software or Data Integrity Failures" },
+    { id: "A09", name: "Security Logging and Alerting Failures" },
+    { id: "A10", name: "Mishandling of Exceptional Conditions" }
+  ]
+};
 
 /* ---------- EDIT: Phrases typed out in the hero ---------- */
 const typedPhrases = [

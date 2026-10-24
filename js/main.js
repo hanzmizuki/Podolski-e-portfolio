@@ -30,7 +30,7 @@ function video(url, title) {
             </div>`;
   }
   return `<div class="video">
-            <iframe src="https://www.youtube.com/embed/${id}"
+            <iframe src="https://www.youtube-nocookie.com/embed/${id}"
                     title="YouTube video: ${esc(title)}"
                     loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -54,12 +54,82 @@ function initials(name) {
   return name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
 }
 
-// Stagger delay for cards in a grid row
-const delay = i => `style="--d:${(i % 3) * 90}ms"`;
+// Stagger delay for cards in a grid row. Stored as a data attribute and applied
+// with JavaScript, because the Content-Security-Policy blocks inline style="" attributes.
+const delay = (i, perRow = 3) => `data-d="${(i % perRow) * 90}"`;
+
+// ---------- OWASP Top 10 helpers ----------
+const owaspById = id => owaspTop10.items.find(item => item.id === (id || "").trim().toUpperCase());
+
+function owaspBadge(id) {
+  const item = owaspById(id);
+  if (!item) return `<span class="owasp-badge unmapped">OWASP category to be added</span>`;
+  return `<span class="owasp-badge" title="OWASP Top 10 ${esc(owaspTop10.version)}: ${esc(item.name)}">
+            <span class="owasp-id">${esc(item.id)}:${esc(owaspTop10.version)}</span> ${esc(item.name)}
+          </span>`;
+}
+
+// ---------- Before / after code comparison ----------
+// Marks lines that were removed (vulnerable) or added (fixed) using a
+// longest-common-subsequence line diff.
+function diffLines(before, after) {
+  const a = before.split("\n"), b = after.split("\n");
+  const same = (x, y) => x.trim() === y.trim();
+  const lcs = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+  for (let i = a.length - 1; i >= 0; i--) {
+    for (let j = b.length - 1; j >= 0; j--) {
+      lcs[i][j] = same(a[i], b[j]) ? lcs[i + 1][j + 1] + 1 : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
+    }
+  }
+  const removed = new Set(), added = new Set();
+  let i = 0, j = 0;
+  while (i < a.length && j < b.length) {
+    if (same(a[i], b[j])) { i++; j++; }
+    else if (lcs[i + 1][j] >= lcs[i][j + 1]) removed.add(i++);
+    else added.add(j++);
+  }
+  while (i < a.length) removed.add(i++);
+  while (j < b.length) added.add(j++);
+  return { a, b, removed, added };
+}
+
+function codeBlock(lines, changed, kind) {
+  return `<pre class="code ${kind}"><code>${lines.map((line, n) => {
+    const mark = changed.has(n) ? ` class="ln-${kind}"` : "";
+    const sign = changed.has(n) ? (kind === "del" ? "−" : "+") : " ";
+    return `<span${mark}><span class="ln" aria-hidden="true">${sign}</span>${esc(line) || " "}</span>`;
+  }).join("")}</code></pre>`;
+}
+
+let compareCount = 0;
+function codeCompare(c) {
+  const before = (c.vulnerableCode || "").replace(/^\n+|\s+$/g, "");
+  const after = (c.fixedCode || "").replace(/^\n+|\s+$/g, "");
+  if (!before && !after) {
+    return `<div><h4>Code Comparison</h4><p>${TBA}</p></div>`;
+  }
+  const d = diffLines(before, after);
+  const id = `cmp-${++compareCount}`;
+  const lang = c.language && c.language.trim() ? `<span class="code-lang">${esc(c.language)}</span>` : "";
+  return `
+    <div class="compare">
+      <h4>Code Comparison ${lang}</h4>
+      <div class="tabs" role="tablist" aria-label="Code before and after the fix">
+        <button type="button" role="tab" id="${id}-t1" aria-controls="${id}-p1" aria-selected="true" class="tab bad">Vulnerable</button>
+        <button type="button" role="tab" id="${id}-t2" aria-controls="${id}-p2" aria-selected="false" tabindex="-1" class="tab good">Fixed</button>
+      </div>
+      <div role="tabpanel" id="${id}-p1" aria-labelledby="${id}-t1" tabindex="0">
+        ${before ? codeBlock(d.a, d.removed, "del") : `<p>${TBA}</p>`}
+      </div>
+      <div role="tabpanel" id="${id}-p2" aria-labelledby="${id}-t2" tabindex="0" hidden>
+        ${after ? codeBlock(d.b, d.added, "add") : `<p>${TBA}</p>`}
+      </div>
+    </div>`;
+}
 
 // Members
 document.getElementById("members-grid").innerHTML = members.map((m, i) => `
-  <article class="card reveal" style="--d:${(i % 4) * 90}ms">
+  <article class="card reveal" ${delay(i, 4)}>
     <div class="member-top">
       <div class="avatar" aria-hidden="true">${esc(initials(m.name))}</div>
       <h3>${esc(m.name)}</h3>
@@ -93,8 +163,8 @@ document.getElementById("labs-grid").innerHTML = labs.map((lab, i) => {
 // Main project
 document.getElementById("project-main").innerHTML = `
   <article class="card project-feature reveal">
-    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
-      <h3 style="font-size:1.35rem">${esc(project.name)}</h3>
+    <div class="project-body">
+      <h3 class="project-title">${esc(project.name)}</h3>
       <div><h4>Problem Statement</h4><p>${text(project.problem)}</p></div>
       <div><h4>Project Description</h4><p>${text(project.description)}</p></div>
       <div><h4>Reflection</h4><p>${text(project.reflection)}</p></div>
@@ -103,18 +173,35 @@ document.getElementById("project-main").innerHTML = `
     ${video(project.video, project.name + " project overview")}
   </article>`;
 
+// OWASP Top 10 coverage grid
+document.getElementById("owasp-version").textContent = owaspTop10.version;
+document.getElementById("owasp-grid").innerHTML = owaspTop10.items.map((item, i) => {
+  const matched = cases.map((c, n) => ({ c, n })).filter(({ c }) => owaspById(c.owasp) === item);
+  const list = matched.map(({ c, n }) => `Case ${String(n + 1).padStart(2, "0")}: ${esc(c.title)}`).join("<br>");
+  return `
+  <li class="owasp-tile reveal${matched.length ? " covered" : ""}" ${delay(i, 5)}>
+    <span class="owasp-id">${esc(item.id)}</span>
+    <span class="owasp-name">${esc(item.name)}</span>
+    <span class="owasp-cases">${matched.length ? list : "Not covered yet"}</span>
+  </li>`;
+}).join("");
+const coveredCount = new Set(cases.map(c => owaspById(c.owasp)).filter(Boolean)).size;
+document.getElementById("owasp-count").textContent = `${coveredCount} of ${owaspTop10.items.length}`;
+
 // Vulnerability cases
 document.getElementById("cases-grid").innerHTML = cases.map((c, i) => `
-  <article class="card reveal" ${delay(i)}>
+  <article class="card reveal" ${delay(i, 2)}>
     <span class="case-number">Case ${String(i + 1).padStart(2, "0")} · Planned</span>
     <h3>${esc(c.title)}</h3>
+    ${owaspBadge(c.owasp)}
     <div><h4>Vulnerability &amp; Impact</h4><p>${text(c.description)}</p></div>
     <div><h4>Security Fix Implemented</h4><p>${text(c.fix)}</p></div>
+    ${codeCompare(c)}
     ${video(c.video, `Case ${i + 1}: ${c.title} demonstration`)}
     <div>
       <h4>Test Result</h4>
       <table class="test-table">
-        <caption class="planned-note" style="text-align:left;padding-bottom:4px">Behaviour before and after the fix</caption>
+        <caption class="planned-note table-caption">Behaviour before and after the fix</caption>
         <tr><th scope="row">Before fix</th><td>${text(c.before)}</td></tr>
         <tr><th scope="row">After fix</th><td>${text(c.after)}</td></tr>
       </table>
@@ -122,6 +209,43 @@ document.getElementById("cases-grid").innerHTML = cases.map((c, i) => `
     <div><h4>Reflection</h4><p>${text(c.reflection)}</p></div>
     <div class="card-actions">${repoButton(c.repo, `Case ${i + 1} source code`)}</div>
   </article>`).join("");
+
+// Apply stagger delays through the CSSOM (allowed by the CSP, unlike style="" attributes)
+document.querySelectorAll("[data-d]").forEach(el => el.style.setProperty("--d", `${el.dataset.d}ms`));
+
+/* ---------- Code comparison tabs (click + arrow keys) ---------- */
+function selectTab(tab) {
+  tab.parentElement.querySelectorAll('[role="tab"]').forEach(t => {
+    const on = t === tab;
+    t.setAttribute("aria-selected", String(on));
+    t.tabIndex = on ? 0 : -1;
+    document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+  });
+}
+document.addEventListener("click", e => {
+  const tab = e.target.closest('[role="tab"]');
+  if (tab) selectTab(tab);
+});
+document.addEventListener("keydown", e => {
+  const tab = e.target.closest('[role="tab"]');
+  if (!tab || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+  const tabs = [...tab.parentElement.querySelectorAll('[role="tab"]')];
+  let i = tabs.indexOf(tab);
+  if (e.key === "ArrowRight") i = (i + 1) % tabs.length;
+  if (e.key === "ArrowLeft") i = (i - 1 + tabs.length) % tabs.length;
+  if (e.key === "Home") i = 0;
+  if (e.key === "End") i = tabs.length - 1;
+  e.preventDefault();
+  selectTab(tabs[i]);
+  tabs[i].focus();
+});
+
+/* ---------- Show the live Content-Security-Policy in the Security section ---------- */
+const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+const cspOut = document.getElementById("csp-text");
+if (cspMeta && cspOut) {
+  cspOut.textContent = cspMeta.content.split(";").map(rule => rule.trim()).filter(Boolean).join(";\n") + ";";
+}
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -372,7 +496,7 @@ document.addEventListener("keydown", e => {
 });
 
 /* ---------- Highlight current section in navigation ---------- */
-const sectionIds = ["home", "team", "labs", "projects", "reflection", "skills", "resources"];
+const sectionIds = ["home", "team", "labs", "projects", "reflection", "skills", "security", "resources"];
 const linkFor = id => navLinks.querySelector(`a[href="#${id}"]`);
 if ("IntersectionObserver" in window) {
   const observer = new IntersectionObserver(entries => {

@@ -2,21 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Security: only this site's own scripts and styles may run; only YouTube's privacy-enhanced player may be embedded -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Secure Programming group e-Portfolio, Universiti Kebangsaan Malaysia.">
   <meta name="theme-color" content="#000080">
   <title>Secure Programming e-Portfolio</title>
   <link rel="stylesheet" href="css/style.css">
-  <script>
-    // Runs before the page is drawn so there is no flash of the wrong theme
-    (function () {
-      var root = document.documentElement, saved = null;
-      root.classList.add("js");
-      try { saved = localStorage.getItem("theme"); } catch (e) {}
-      var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-      root.setAttribute("data-theme", dark ? "dark" : "light");
-    })();
-  </script>
+  <script src="js/theme-init.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -36,6 +30,7 @@
         <li><a href="#projects">Projects</a></li>
         <li><a href="#reflection">Reflection</a></li>
         <li><a href="#skills">Skills</a></li>
+        <li><a href="#security">Security</a></li>
         <li><a href="#resources">Resources</a></li>
       </ul>
       <div class="nav-actions">
@@ -152,9 +147,13 @@
 
         <div id="project-main"></div>
 
+        <h3 class="subhead reveal">OWASP Top 10 Coverage</h3>
+        <p class="owasp-intro reveal">Each vulnerability case is mapped to the <a href="https://owasp.org/Top10/" target="_blank" rel="noopener noreferrer">OWASP Top 10 (<span id="owasp-version"></span>)<span class="visually-hidden"> (opens in a new tab)</span></a>, the standard list of the most critical web application security risks. Categories covered: <strong id="owasp-count"></strong>.</p>
+        <ol class="owasp-grid" id="owasp-grid"></ol>
+
         <h3 class="subhead reveal">Vulnerability Solutions</h3>
-        <p class="planned-note reveal" style="margin:-8px 0 20px">These are planned placeholders, not completed implementations.</p>
-        <div class="grid" id="cases-grid"></div>
+        <p class="planned-note intro-note reveal">These are planned placeholders, not completed implementations.</p>
+        <div class="grid cases" id="cases-grid"></div>
       </div>
     </section>
 
@@ -186,11 +185,75 @@
       </div>
     </section>
 
+    <!-- ==================== SITE SECURITY (SELF-AUDIT) ==================== -->
+    <section id="security" aria-labelledby="security-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="kicker">06 / Security</span>
+          <h2 id="security-title">How This Site Is Secured</h2>
+          <p>We applied what we learned in this course to the e-Portfolio itself. Each control below points to where it is implemented in the source code.</p>
+        </div>
+
+        <ul class="controls">
+          <li class="control reveal" data-d="0">
+            <h3>Content Security Policy</h3>
+            <p>Only scripts and styles hosted on this site can run. Inline scripts, inline styles, plugins, forms and <code>&lt;base&gt;</code> tags are blocked, and only YouTube's privacy-enhanced player may be embedded. This limits the damage if an XSS bug ever slipped in.</p>
+            <span class="where"><code>&lt;meta http-equiv="Content-Security-Policy"&gt;</code> in index.html</span>
+          </li>
+          <li class="control reveal" data-d="90">
+            <h3>Output encoding</h3>
+            <p>Every value from the content file is HTML-encoded (<code>&amp; &lt; &gt; " '</code>) before it reaches the page, so text can never be interpreted as HTML or script.</p>
+            <span class="where"><code>esc()</code> in js/main.js</span>
+          </li>
+          <li class="control reveal" data-d="180">
+            <h3>Input allow-listing</h3>
+            <p>Repository links are only accepted if they start with <code>https://</code>, which rejects <code>javascript:</code> and <code>data:</code> URLs. For videos, only an 11-character YouTube ID is extracted with a strict pattern; the rest of the link is discarded.</p>
+            <span class="where"><code>safeUrl()</code> and <code>youtubeId()</code> in js/main.js</span>
+          </li>
+          <li class="control reveal" data-d="0">
+            <h3>Safe external links</h3>
+            <p>Links that open in a new tab use <code>rel="noopener noreferrer"</code>, so the opened page cannot take control of this tab (reverse tabnabbing).</p>
+            <span class="where"><code>repoButton()</code> in js/main.js</span>
+          </li>
+          <li class="control reveal" data-d="90">
+            <h3>Privacy-respecting embeds</h3>
+            <p>Videos load from <code>youtube-nocookie.com</code> only when scrolled into view, with a strict referrer policy that sends only our site's origin.</p>
+            <span class="where"><code>video()</code> in js/main.js</span>
+          </li>
+          <li class="control reveal" data-d="180">
+            <h3>HTTPS everywhere</h3>
+            <p>GitHub Pages enforces HTTPS for this site, and the policy's <code>upgrade-insecure-requests</code> rule upgrades any stray <code>http://</code> request.</p>
+            <span class="where">GitHub Pages settings + CSP</span>
+          </li>
+          <li class="control reveal" data-d="0">
+            <h3>Zero third-party code</h3>
+            <p>No frameworks, CDNs, fonts, analytics or trackers. Everything is written by us, which removes the risk of a compromised dependency (OWASP A03:2025 Software Supply Chain Failures).</p>
+            <span class="where">css/ and js/ folders</span>
+          </li>
+          <li class="control reveal" data-d="90">
+            <h3>Minimal data</h3>
+            <p>The site has no forms, sets no cookies and collects nothing. The only thing stored is your light/dark mode choice, kept in your own browser.</p>
+            <span class="where"><code>localStorage "theme"</code> in js/main.js</span>
+          </li>
+        </ul>
+
+        <div class="panel reveal">
+          <h3>Known limitations</h3>
+          <p>GitHub Pages does not let us set custom HTTP response headers, so the policy is delivered through a <code>&lt;meta&gt;</code> tag. That means clickjacking protection (<code>frame-ancestors</code> / <code>X-Frame-Options</code>), <code>X-Content-Type-Options</code> and CSP violation reporting cannot be enabled here. Hosting on a platform that supports a headers file (such as Netlify or Cloudflare Pages) would close this gap.</p>
+        </div>
+
+        <details class="csp-details reveal">
+          <summary>View the Content-Security-Policy in use</summary>
+          <pre class="code"><code id="csp-text"></code></pre>
+        </details>
+      </div>
+    </section>
+
     <!-- ==================== RESOURCES ==================== -->
     <section id="resources" aria-labelledby="resources-title">
       <div class="container">
         <div class="section-head reveal">
-          <span class="kicker">06 / Resources</span>
+          <span class="kicker">07 / Resources</span>
           <h2 id="resources-title">Resources</h2>
           <p>Documentation, APIs, libraries and references actually used.</p>
         </div>
@@ -198,7 +261,7 @@
           <!-- Replace with a <ul class="plain"> list of references, each with a link -->
           <p><span class="tba">To be added</span></p>
         </div>
-        <div class="panel reveal" style="--d:120ms">
+        <div class="panel reveal" data-d="120">
           <h3>AI Acknowledgement</h3>
           <p>AI assistance was used to support the e-Portfolio layout and wording. The group is responsible for reviewing the content and verifying the project evidence.</p>
         </div>
@@ -209,14 +272,14 @@
   <!-- ==================== FOOTER ==================== -->
   <footer class="site-footer">
     <div class="container">
-      <p style="margin:0"><strong>Podolski</strong> · 3CS-ST · 2026</p>
+      <p class="footer-line"><strong>Podolski</strong> · 3CS-ST · 2026</p>
     </div>
   </footer>
 
   <button class="to-top" type="button" aria-label="Back to top">↑</button>
 
   <noscript>
-    <p style="text-align:center;padding:16px">Please enable JavaScript to view the member, lab and project cards.</p>
+    <p class="noscript-note">Please enable JavaScript to view the member, lab and project cards.</p>
   </noscript>
 
   <script src="js/data.js"></script>

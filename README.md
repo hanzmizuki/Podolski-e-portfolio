@@ -19,7 +19,9 @@ Built as part of our coursework at Universiti Kebangsaan Malaysia (UKM), Faculty
 The website highlights:
 - Each member's role and contribution
 - Lab exercises with demonstration videos and reflections
-- Our project and vulnerability solution cases (before/after testing)
+- Our project and vulnerability solution cases (before/after testing and code comparison)
+- How each case maps to the OWASP Top 10
+- How the e-Portfolio itself is secured (self-audit)
 - Our learning journey, skills and resources used
 
 ## 👥 Team Members
@@ -39,7 +41,15 @@ The website highlights:
 - **Scroll animations**: sections and cards fade in as you scroll, plus a reading progress bar and a back-to-top button
 - **Responsive**: works on desktop, tablet and mobile (collapsible menu on small screens)
 - **Accessible**: keyboard navigation, visible focus outlines, skip link, and reduced motion for visitors who turn it on in their system settings
-- **Secure by default**: all content is HTML-escaped before rendering, only `https://` links are accepted, and YouTube videos are embedded with a strict referrer policy
+- **OWASP Top 10 mapping**: every vulnerability case carries an OWASP category badge, and a coverage grid shows which of the ten categories our work addresses
+- **Before/after code comparison**: each case can show the vulnerable and fixed code in tabs, with removed and added lines highlighted automatically
+- **Security self-audit**: a "How This Site Is Secured" section documents each control, where it lives in the code, and the known limitations of GitHub Pages
+- **Secure by default**:
+  - a strict Content-Security-Policy that allows no inline scripts or styles
+  - all content is HTML-escaped before rendering
+  - only `https://` links are accepted
+  - YouTube videos are embedded from `youtube-nocookie.com` with a strict referrer policy
+  - no third-party code
 
 ## 🛠️ Built With
 
@@ -57,8 +67,9 @@ The website highlights:
 ├── css/
 │   └── style.css   # Theme colours, dark mode, layout and animations
 ├── js/
-│   ├── data.js     # EDITABLE CONTENT: members, labs, project, cases, hero phrases
-│   └── main.js     # Rendering, animations, theme toggle, navigation
+│   ├── data.js     # EDITABLE CONTENT: members, labs, project, cases, OWASP list, hero phrases
+│   ├── main.js     # Rendering, code diff, animations, theme toggle, navigation
+│   └── theme-init.js  # Applies the saved light/dark theme before the page is drawn
 └── README.md
 ```
 
@@ -67,9 +78,14 @@ The website highlights:
 **Members, labs, project and vulnerability cases**: open `js/data.js` and fill in the empty `""` fields. Empty fields automatically show "To be added", "Video coming soon" or "Repository link coming soon".
 - `video`: any normal YouTube link (`youtube.com/watch?v=…`, `youtu.be/…`, `/shorts/…`)
 - `repo`: a full GitHub link starting with `https://`
+- `owasp`: the OWASP Top 10 ID for a case, e.g. `"A05"` for Injection (the coverage grid updates itself)
+- `language`, `vulnerableCode`, `fixedCode`: the code before and after your fix. Write code between backticks so it can span several lines; there is an example in `data.js`
+- `owaspTop10`: the list of categories (2025 edition). Replace it if your course uses the 2021 edition
 - `typedPhrases`: the lines typed out in the hero
 
-**Project scenario, reflection, skills and resources**: edit `index.html` directly. Look for the `<!-- EDIT -->` comments.
+**Project scenario, reflection, skills and resources**: edit `index.html` directly. Each section is marked with an HTML comment such as `<!-- ==================== REFLECTION ==================== -->`.
+
+> **Note:** the Content-Security-Policy blocks inline `<script>` blocks and `style="..."` attributes. Put new scripts in `js/` and new styles in `css/style.css`, or they will be ignored by the browser.
 
 **Colours**: change the variables at the top of `css/style.css`. Light-mode colours are in `:root`, dark-mode colours are in `:root[data-theme="dark"]`.
 
