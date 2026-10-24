@@ -1,27 +1,34 @@
 # Podolski E-Portfolio
 
-A group e-portfolio website showcasing our team members, skills, and projects.  
+A group e-Portfolio website for the **Secure Programming** course, documenting our labs, project development, vulnerability testing and security fixes.
 Built as part of our coursework at Universiti Kebangsaan Malaysia (UKM), Faculty of Information Science and Technology (FTSM).
 
 ## 🔗 Live Site
 
-👉 **[https://podolski.github.io/](https://podolski.github.io/)**
+👉 **[https://hanzmizuki.github.io/E-Portfolio/](https://hanzmizuki.github.io/E-Portfolio/)**
 
 ## 📋 About
 
-This website serves as a collective portfolio for our group. It highlights:
-- Each member's background and skills
-- Projects we've worked on
-- How to get in touch with us
+| | |
+|---|---|
+| **Programme** | Computer Science — Software Technology Track |
+| **Course** | Secure Programming |
+| **Instructor** | Dr Hanis |
+
+The website highlights:
+- Each member's role and contribution
+- Lab exercises with demonstration videos and reflections
+- Our project and vulnerability solution cases (before/after testing)
+- Our learning journey, skills and resources used
 
 ## 👥 Team Members
 
-| Name | Student ID | Role |
+| Name | Matric No. | Role |
 |------|-----------|------|
-| Nik Harith Zikry bin Mohd Azizul | A211140 | *(e.g. Frontend)* |
-| *Member 2* | *ID* | *Role* |
-| *Member 3* | *ID* | *Role* |
-| *Member 4* | *ID* | *Role* |
+| Harith  | A211140 | Project Manager & GitHub Coordinator |
+| Farihin | A211017 | Security Operations Centre (SOC) Analyst |
+| Adam    | A211176 | Application Developer |
+| Luqman  | A212247 | Security Tester & Documentation Coordinator |
 
 ## 🛠️ Built With
 
@@ -34,18 +41,19 @@ This website serves as a collective portfolio for our group. It highlights:
 
 ```
 .
-├── index.html      # Main landing page
-├── css/            # Stylesheets
-├── js/             # Scripts
-├── assets/         # Images & other media
+├── index.html      # The whole website (HTML, CSS and JavaScript in one file)
 └── README.md
 ```
+
+## ✏️ Updating Content
+
+Open `index.html` and find the `EDITABLE CONTENT` section inside the `<script>` near the bottom. Fill in the empty `""` fields for members, labs, the project and vulnerability cases. Empty fields automatically show "To be added", "Video coming soon" or "Repository link coming soon".
 
 ## 🚀 Running Locally
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/podolski/podolski.github.io.git
+   git clone https://github.com/hanzmizuki/E-Portfolio.git
    ```
 2. Open `index.html` in your browser.
 
