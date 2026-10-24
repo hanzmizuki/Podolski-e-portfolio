@@ -1,6 +1,6 @@
 # Podolski E-Portfolio
 
-A group e-Portfolio website for the **Secure Programming** course, documenting our labs, project development, vulnerability testing and security fixes.
+A group e-Portfolio website for the **TTTN3133 Secure Programming** course, documenting our labs, project development, vulnerability testing and security fixes.
 Built as part of our coursework at Universiti Kebangsaan Malaysia (UKM), Faculty of Information Science and Technology (FTSM).
 
 ## 🔗 Live Site
@@ -12,8 +12,8 @@ Built as part of our coursework at Universiti Kebangsaan Malaysia (UKM), Faculty
 | | |
 |---|---|
 | **Programme** | Computer Science — Software Technology Track |
-| **Course** | Secure Programming |
-| **Instructor** | Dr Hanis |
+| **Course** | TTTN3133 Secure Programming |
+| **Instructor** | Ts. Dr. Nur Hanis Sabrina binti Suhaimi |
 
 The website highlights:
 - Each member's role and contribution
