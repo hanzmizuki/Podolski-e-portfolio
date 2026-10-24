@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Secure Programming group e-Portfolio, Universiti Kebangsaan Malaysia.">
+  <title>Secure Programming e-Portfolio</title>
+  <style>
+    /* ==========================================================
+       THEME: navy, white and purple
+       ========================================================== */
+    :root {
+      --navy-900: #0b1530;
+      --navy-800: #13214a;
+      --navy-700: #1d2f63;
+      --purple-700: #5b21b6;
+      --purple-600: #6d28d9;
+      --purple-500: #7c3aed;
+      --purple-100: #ede9fe;
+      --purple-50: #f6f3ff;
+      --white: #ffffff;
+      --bg: #f7f8fc;
+      --text: #1a2140;
+      --muted: #4a5375;
+      --border: #dde1ef;
+      --success-bg: #e7f6ee;
+      --success-text: #135c35;
+      --focus: #f5b301;
+      --radius: 14px;
+      --shadow: 0 1px 2px rgba(11, 21, 48, .06), 0 6px 18px rgba(11, 21, 48, .06);
+      --nav-h: 64px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--nav-h) + 16px);
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    img { max-width: 100%; height: auto; }
+    a { color: var(--purple-700); }
+    a:hover { color: var(--purple-500); }
+
+    /* Visible keyboard focus everywhere */
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -60px;
+      z-index: 100;
+      background: var(--white);
+      color: var(--navy-900);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 12px; }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ==========================================================
+       STICKY NAVIGATION
+       ========================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--navy-900);
+      color: var(--white);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+    }
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: var(--nav-h);
+      gap: 16px;
+    }
+    .brand {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand:hover { color: var(--white); }
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--purple-500);
+      font-size: .9rem;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      display: block;
+      color: #dfe4f7;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: .95rem;
+    }
+    .nav-links a:hover,
+    .nav-links a[aria-current="true"] {
+      background: var(--navy-700);
+      color: var(--white);
+    }
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid #3a4b82;
+      color: var(--white);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    @media (max-width: 820px) {
+      .nav-toggle { display: inline-block; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        flex-direction: column;
+        background: var(--navy-900);
+        padding: 8px 16px 16px;
+        border-top: 1px solid var(--navy-700);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px; }
+    }
+
+    /* ==========================================================
+       HERO
+       ========================================================== */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 55%, var(--purple-700) 100%);
+      color: var(--white);
+      padding: 72px 0 64px;
+    }
+    .hero .eyebrow {
+      display: inline-block;
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .25);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: .85rem;
+      letter-spacing: .02em;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.15;
+      margin: 16px 0 12px;
+    }
+    .hero p.lead {
+      max-width: 720px;
+      font-size: 1.08rem;
+      color: #e6e9f7;
+      margin: 0;
+    }
+    .academic {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .academic div {
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+    .academic dt {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #c9c2f5;
+    }
+    .academic dd { margin: 2px 0 0; font-weight: 600; }
+
+    /* ==========================================================
+       SECTIONS & CARDS
+       ========================================================== */
+    main > section { padding: 64px 0; }
+    main > section:nth-of-type(even) { background: var(--white); }
+
+    .section-head { margin-bottom: 28px; }
+    .section-head h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+      margin: 0 0 6px;
+      color: var(--navy-900);
+    }
+    .section-head h2::after {
+      content: "";
+      display: block;
+      width: 56px;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--purple-500);
+      margin-top: 10px;
+    }
+    .section-head p { margin: 0; color: var(--muted); max-width: 720px; }
+
+    h3 { color: var(--navy-900); line-height: 1.3; }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    .grid.members { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    main > section:nth-of-type(even) .card { background: var(--bg); }
+    .card h3 { margin: 0; font-size: 1.15rem; }
+    .card h4 {
+      margin: 0 0 2px;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--purple-700);
+    }
+    .card p { margin: 0; }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--purple-500);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+    }
+    .panel p { margin: 0; }
+    .panel + .panel { margin-top: 16px; }
+    .panel h3 { margin: 0 0 8px; }
+
+    .subhead { margin: 48px 0 20px; font-size: 1.35rem; }
+
+    /* "To be added" label */
+    .tba {
+      display: inline-block;
+      background: var(--purple-50);
+      color: var(--purple-700);
+      border: 1px dashed #a78bfa;
+      padding: 1px 10px;
+      border-radius: 999px;
+      font-size: .9rem;
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    /* Member cards */
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy-700), var(--purple-500));
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .member-meta { margin: 0; display: grid; gap: 2px; }
+    .member-meta dt { font-size: .8rem; color: var(--muted); }
+    .member-meta dd { margin: 0 0 6px; font-weight: 600; }
+    .role {
+      display: inline-block;
+      background: var(--navy-800);
+      color: var(--white);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 600;
+    }
+    .status {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+    .status.done { background: var(--success-bg); color: var(--success-text); }
+    .status.proposed { background: var(--purple-100); color: var(--purple-700); }
+    .contrib { border-top: 1px solid var(--border); padding-top: 10px; }
+
+    /* Video embed & placeholder */
+    .video {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--navy-900);
+    }
+    .video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-placeholder {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #d9dcf2;
+      background:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, .03) 0 12px, transparent 12px 24px),
+        linear-gradient(135deg, var(--navy-800), var(--purple-700));
+      padding: 16px;
+    }
+    .video-placeholder span.icon {
+      display: block;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 8px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, .6);
+      position: relative;
+    }
+    .video-placeholder span.icon::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 15px;
+      border-left: 16px solid rgba(255, 255, 255, .8);
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+    .video-placeholder strong { color: var(--white); font-size: 1.05rem; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      align-self: flex-start;
+      background: var(--purple-600);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 2px solid var(--purple-600);
+    }
+    .btn:hover { background: var(--purple-700); border-color: var(--purple-700); color: var(--white); }
+    .repo-missing {
+      align-self: flex-start;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: .92rem;
+    }
+    main > section:nth-of-type(even) .card .repo-missing { background: var(--white); }
+    .card-actions { margin-top: auto; padding-top: 4px; }
+
+    .case-number {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--purple-700);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .planned-note {
+      font-size: .82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Before / after test table */
+    .test-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .92rem;
+    }
+    .test-table th,
+    .test-table td {
+      text-align: left;
+      vertical-align: top;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+    }
+    .test-table th {
+      background: var(--navy-800);
+      color: var(--white);
+      font-weight: 600;
+      width: 32%;
+    }
+
+    .project-feature {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .project-feature { grid-template-columns: 1.1fr 1fr; align-items: start; }
+    }
+
+    ul.plain { margin: 0; padding-left: 20px; }
+
+    /* ==========================================================
+       FOOTER
+       ========================================================== */
+    .site-footer {
+      background: var(--navy-900);
+      color: #d4d9ee;
+      padding: 28px 0;
+      text-align: center;
+      font-size: .95rem;
+    }
+    .site-footer strong { color: var(--white); }
+
+    /* Respect reduced-motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ==================== HEADER & NAVIGATION ==================== -->
+  <header class="site-header">
+    <nav class="container nav-bar" aria-label="Main navigation">
+      <a class="brand" href="#home">
+        <span class="brand-mark" aria-hidden="true">SP</span>
+        <span>Secure Programming e-Portfolio</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#labs">Labs</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#reflection">Reflection</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#resources">Resources</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- ==================== HOME ==================== -->
+    <section id="home" class="hero" aria-labelledby="home-title">
+      <div class="container">
+        <span class="eyebrow">Group e-Portfolio · 2026</span>
+        <!-- EDIT: Website title -->
+        <h1 id="home-title">Secure Programming e-Portfolio</h1>
+        <!-- EDIT: Home introduction -->
+        <p class="lead">This e-Portfolio presents our group’s work for the Secure Programming course at Universiti Kebangsaan Malaysia. It will document our practical exercises, project development, vulnerability testing and security improvements, supported by source code, demonstration videos and reflections.</p>
+
+        <!-- EDIT: Academic details -->
+        <dl class="academic">
+          <div><dt>Programme</dt><dd>Computer Science — Software Technology Track</dd></div>
+          <div><dt>University</dt><dd>Universiti Kebangsaan Malaysia</dd></div>
+          <div><dt>Course</dt><dd>Secure Programming</dd></div>
+          <div><dt>Instructor</dt><dd>Dr Hanis</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ==================== PROJECT SCENARIO & GROUP MEMBERS ==================== -->
+    <section id="team" aria-labelledby="team-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="team-title">Project Scenario &amp; Group Members</h2>
+          <p>Completed contributions are listed separately from proposed responsibilities.</p>
+        </div>
+
+        <div class="panel">
+          <h3>Project Scenario</h3>
+          <!-- EDIT: Project scenario -->
+          <p><span class="tba">To be added</span> once the application and its scope have been decided.</p>
+        </div>
+
+        <h3 class="subhead">Group Members</h3>
+        <div class="grid members" id="members-grid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== LABS ==================== -->
+    <section id="labs" aria-labelledby="labs-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="labs-title">Labs</h2>
+          <p>Practical exercises completed during the course. Cards are updated as each lab is completed.</p>
+        </div>
+        <div class="grid" id="labs-grid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== PROJECTS ==================== -->
+    <section id="projects" aria-labelledby="projects-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="projects-title">Projects</h2>
+          <p>Our main project and the vulnerability cases we plan to investigate and fix.</p>
+        </div>
+
+        <div id="project-main"></div>
+
+        <h3 class="subhead">Vulnerability Solutions</h3>
+        <p class="planned-note" style="margin:-8px 0 20px">These are planned placeholders, not completed implementations.</p>
+        <div class="grid" id="cases-grid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== REFLECTION ==================== -->
+    <section id="reflection" aria-labelledby="reflection-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="reflection-title">Reflection &amp; Learning Journey</h2>
+        </div>
+        <div class="panel">
+          <!-- EDIT: 3–4 sentences about what the group learned, challenges faced and how the work improved your understanding of secure coding -->
+          <p><span class="tba">To be added</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SKILLS ==================== -->
+    <section id="skills" aria-labelledby="skills-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="skills-title">Skills &amp; Tech Stack</h2>
+          <p>Only technologies, tools and security skills actually used in this course are listed here.</p>
+        </div>
+        <div class="panel">
+          <!-- EDIT: Replace with a <ul class="plain"> list of technologies, tools and skills actually used -->
+          <p><span class="tba">To be added</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RESOURCES ==================== -->
+    <section id="resources" aria-labelledby="resources-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="resources-title">Resources</h2>
+          <p>Documentation, APIs, libraries and references actually used.</p>
+        </div>
+        <div class="panel">
+          <!-- EDIT: Replace with a <ul class="plain"> list of references, each with a link -->
+          <p><span class="tba">To be added</span></p>
+        </div>
+        <div class="panel">
+          <h3>AI Acknowledgement</h3>
+          <p>AI assistance was used to support the e-Portfolio layout and wording. The group is responsible for reviewing the content and verifying the project evidence.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <p style="margin:0"><strong>Harith</strong> · A211140 · 2026</p>
+    </div>
+  </footer>
+
+  <noscript>
+    <p style="text-align:center;padding:16px">Please enable JavaScript to view the member, lab and project cards.</p>
+  </noscript>
+
+  <script>
+    /* ==========================================================
+       EDITABLE CONTENT
+       Update the data below. Leave a field as "" (empty) and the
+       page will automatically show "To be added", "Video coming
+       soon" or "Repository link coming soon".
+       Video links can be any normal YouTube link, e.g.
+       https://www.youtube.com/watch?v=VIDEO_ID or https://youtu.be/VIDEO_ID
+       ========================================================== */
+
+    /* ---------- EDIT: Group members ---------- */
+    const members = [
+      {
+        name: "Harith",
+        matric: "A211140",
+        role: "Project Manager & GitHub Coordinator",
+        completed: "Created the GitHub repository and organised the initial project structure.",
+        proposed: "Coordinate group tasks, manage code integration and oversee e-Portfolio deployment."
+      },
+      {
+        name: "Farihin",
+        matric: "A211017",
+        role: "Security Operations Centre (SOC) Analyst",
+        completed: "",
+        proposed: "Monitor security logs, investigate suspicious activities and document security findings."
+      },
+      {
+        name: "Adam",
+        matric: "", // EDIT: Adam's matric number
+        role: "Application Developer",
+        completed: "",
+        proposed: "Develop application features, implement security fixes and demonstrate code changes."
+      },
+      {
+        name: "Luqman",
+        matric: "", // EDIT: Luqman's matric number
+        role: "Security Tester & Documentation Coordinator",
+        completed: "",
+        proposed: "Test vulnerabilities and fixes, record test results and prepare documentation and demonstration videos."
+      }
+    ];
+
+    /* ---------- EDIT: Labs (add or remove objects as needed) ---------- */
+    const labs = [
+      { title: "", description: "", video: "", reflection: "" },
+      { title: "", description: "", video: "", reflection: "" },
+      { title: "", description: "", video: "", reflection: "" }
+    ];
+
+    /* ---------- EDIT: Main project ---------- */
+    const project = {
+      name: "TBD (To Be Decided)",
+      problem: "",
+      description: "",
+      video: "",
+      repo: "",
+      reflection: ""
+    };
+
+    /* ---------- EDIT: Vulnerability solution cases ---------- */
+    const cases = [
+      { title: "Login Test",                              description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
+      { title: "Data 1 — Specific topic to be added",     description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
+      { title: "Data 2 — Specific topic to be added",     description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
+      { title: "SQL Injection",                           description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
+      { title: "Vulnerability topic to be decided",       description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" },
+      { title: "Vulnerability topic to be decided",       description: "", fix: "", video: "", repo: "", before: "", after: "", reflection: "" }
+    ];
+
+    /* ==========================================================
+       RENDERING (no need to edit below this line)
+       ========================================================== */
+    const TBA = '<span class="tba">To be added</span>';
+
+    function esc(str) {
+      return String(str)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    function text(value) {
+      return value && value.trim() ? esc(value) : TBA;
+    }
+
+    // Accepts watch?v=, youtu.be/, /embed/, /shorts/ links or a bare 11-character ID
+    function youtubeId(url) {
+      if (!url) return "";
+      const trimmed = url.trim();
+      if (/^[\w-]{11}$/.test(trimmed)) return trimmed;
+      const match = trimmed.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/);
+      return match ? match[1] : "";
+    }
+
+    function video(url, title) {
+      const id = youtubeId(url);
+      if (!id) {
+        return `<div class="video video-placeholder" role="img" aria-label="Video coming soon for ${esc(title)}">
+                  <div><span class="icon" aria-hidden="true"></span><strong>Video coming soon</strong></div>
+                </div>`;
+      }
+      return `<div class="video">
+                <iframe src="https://www.youtube.com/embed/${id}"
+                        title="YouTube video: ${esc(title)}"
+                        loading="lazy"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen></iframe>
+              </div>`;
+    }
+
+    function safeUrl(url) {
+      return /^https:\/\//i.test((url || "").trim()) ? url.trim() : "";
+    }
+
+    function repoButton(url, label) {
+      const href = safeUrl(url);
+      if (!href) return `<p class="repo-missing">Repository link coming soon</p>`;
+      return `<a class="btn" href="${esc(href)}" target="_blank" rel="noopener noreferrer"
+                 aria-label="View ${esc(label)} on GitHub (opens in a new tab)">View on GitHub <span aria-hidden="true">↗</span></a>`;
+    }
+
+    function initials(name) {
+      return name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
+    }
+
+    // Members
+    document.getElementById("members-grid").innerHTML = members.map(m => `
+      <article class="card">
+        <div class="avatar" aria-hidden="true">${esc(initials(m.name))}</div>
+        <h3>${esc(m.name)}</h3>
+        <span class="role">${esc(m.role)}</span>
+        <dl class="member-meta">
+          <dt>Matric No.</dt><dd>${text(m.matric)}</dd>
+        </dl>
+        <div class="contrib">
+          <span class="status done">Completed contribution</span>
+          <p>${text(m.completed)}</p>
+        </div>
+        <div class="contrib">
+          <span class="status proposed">Proposed responsibilities</span>
+          <p>${text(m.proposed)}</p>
+        </div>
+      </article>`).join("");
+
+    // Labs
+    document.getElementById("labs-grid").innerHTML = labs.map((lab, i) => {
+      const title = lab.title && lab.title.trim() ? lab.title : `Lab ${i + 1}`;
+      return `
+      <article class="card">
+        <h3>${esc(title)}${lab.title && lab.title.trim() ? "" : ` <span class="tba">Title to be added</span>`}</h3>
+        <div><h4>Description</h4><p>${text(lab.description)}</p></div>
+        ${video(lab.video, title + " demonstration")}
+        <div><h4>Reflection</h4><p>${text(lab.reflection)}</p></div>
+      </article>`;
+    }).join("");
+
+    // Main project
+    document.getElementById("project-main").innerHTML = `
+      <article class="card project-feature">
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+          <h3 style="font-size:1.35rem">${esc(project.name)}</h3>
+          <div><h4>Problem Statement</h4><p>${text(project.problem)}</p></div>
+          <div><h4>Project Description</h4><p>${text(project.description)}</p></div>
+          <div><h4>Reflection</h4><p>${text(project.reflection)}</p></div>
+          <div class="card-actions">${repoButton(project.repo, project.name)}</div>
+        </div>
+        ${video(project.video, project.name + " project overview")}
+      </article>`;
+
+    // Vulnerability cases
+    document.getElementById("cases-grid").innerHTML = cases.map((c, i) => `
+      <article class="card">
+        <span class="case-number">Case ${i + 1} · Planned</span>
+        <h3>${esc(c.title)}</h3>
+        <div><h4>Vulnerability &amp; Impact</h4><p>${text(c.description)}</p></div>
+        <div><h4>Security Fix Implemented</h4><p>${text(c.fix)}</p></div>
+        ${video(c.video, `Case ${i + 1}: ${c.title} demonstration`)}
+        <div>
+          <h4>Test Result</h4>
+          <table class="test-table">
+            <caption class="planned-note" style="text-align:left;padding-bottom:4px">Behaviour before and after the fix</caption>
+            <tr><th scope="row">Before fix</th><td>${text(c.before)}</td></tr>
+            <tr><th scope="row">After fix</th><td>${text(c.after)}</td></tr>
+          </table>
+        </div>
+        <div><h4>Reflection</h4><p>${text(c.reflection)}</p></div>
+        <div class="card-actions">${repoButton(c.repo, `Case ${i + 1} source code`)}</div>
+      </article>`).join("");
+
+    /* ---------- Mobile menu ---------- */
+    const toggle = document.querySelector(".nav-toggle");
+    const navLinks = document.getElementById("nav-links");
+    toggle.addEventListener("click", () => {
+      const open = navLinks.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+    navLinks.addEventListener("click", e => {
+      if (e.target.closest("a")) {
+        navLinks.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && navLinks.classList.contains("open")) {
+        navLinks.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
+      }
+    });
+
+    /* ---------- Highlight current section in navigation ---------- */
+    const sectionIds = ["home", "labs", "projects", "reflection", "skills", "resources"];
+    const linkFor = id => navLinks.querySelector(`a[href="#${id}"]`);
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.querySelectorAll("a").forEach(a => a.removeAttribute("aria-current"));
+            const link = linkFor(entry.target.id);
+            if (link) link.setAttribute("aria-current", "true");
+          }
+        });
+      }, { rootMargin: "-40% 0px -55% 0px" });
+      sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    }
+  </script>
+</body>
+</html>
